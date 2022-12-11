@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public class Fine {
 
+    private int id;
+
     private String carNumber;
 
     private String violator;
@@ -35,6 +37,13 @@ public class Fine {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCarNumber() {
         return carNumber;
@@ -103,7 +112,8 @@ public class Fine {
     @Override
     public String toString() {
         return "Fine{" +
-                "carNumber='" + carNumber + '\'' +
+                "id=" + id +
+                ", carNumber='" + carNumber + '\'' +
                 ", vialator='" + violator + '\'' +
                 ", officer='" + officer + '\'' +
                 ", protocol_drafter='" + protocol_drafter + '\'' +
