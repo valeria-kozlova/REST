@@ -1,47 +1,46 @@
 package ru.eisbrecher.springboot.repository;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.eisbrecher.springboot.entity.Fine;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
-@Component
+@Repository
+@Transactional
 public class FineRepository {
+    @Autowired
+    private EntityManager entityManager;
 
-    private ArrayList<Fine> fineList;
-
-    @PostConstruct
-    public void init(){
-        fineList = new ArrayList<>();
-        fineList.add(new Fine("A123BC", "Нарушитель1", "Инспектор1", "Составитель1", LocalDateTime.now(),500,false,false));
-        fineList.add(new Fine("A123BC", "Нарушитель1", "Инспектор2", "Составитель1", LocalDateTime.now(),700,false,false));
-        fineList.add(new Fine("A123BC", "Нарушитель1", "Инспектор1", "Составитель2", LocalDateTime.now(),800,false,false));
+    public List<Fine> getAllFines() {
+        return entityManager.unwrap(Session.class)
+                .createQuery("from Fine", Fine.class).getResultList();
     }
 
-    public ArrayList<Fine> getAllFines() {
-        return fineList;
-    }
 
     public void addNewFine(Fine fine) {
-        fineList.add(fine);
+        entityManager.unwrap(Session.class)
+                .persist(fine);
     }
 
+
     public void updateFine(Fine fine) {
-        fineList.set(fine.getId(), fine);
+        entityManager.unwrap(Session.class)
+                .update(fine);
     }
 
 
     public Fine getFine(int fineId) {
-        return fineList.get(fineId);
+        return entityManager.unwrap(Session.class)
+                .get(Fine.class, fineId);
     }
 
-    public String removeFine(Object fine) {
-        if (!fineList.contains(fine))
-            return "There is no " + fine.toString() + " in database";
-        fineList.remove(fine);
-        return fine.toString() + " was deleted.";
+    public void removeFine(Object fine) {
+        Session session = entityManager.unwrap(Session.class);
+        session.remove(session.get(Fine.class, fine));
     }
-
 }
