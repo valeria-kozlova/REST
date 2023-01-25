@@ -1,25 +1,42 @@
 package ru.eisbrecher.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Entity
+@Table(name = "fines")
 public class Fine {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
+    @Column(name = "car_number")
     private String carNumber;
 
+    @Column //Если имена в таблице совпадают, то не надо указывать имя колонки
     private String violator;
 
+    @Column
     private String officer;
 
+    @Column
     private String protocol_drafter;
 
+    @Column
     private LocalDateTime protocol_time;
 
+    @Column
     private int forfeit;
 
+    @Column
     private boolean court;
 
+    @Column
     private boolean payed;
 
     public Fine(String carNumber, String violator, String officer, String protocol_drafter, LocalDateTime protocol_time, int forfeit, boolean court, boolean payed) {
